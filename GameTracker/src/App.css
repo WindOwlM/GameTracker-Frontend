@@ -1,0 +1,17 @@
+gametracker *{
+
+  margin: 0;
+  padding: 0;
+}
+
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: grey;
+  border-radius: 20px;
+}
+
+.nombre{
+  color: red;
+}
