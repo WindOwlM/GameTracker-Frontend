@@ -1,0 +1,23 @@
+gametracker *{
+
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: grey;
+  color: white;
+  border-radius: 20px;
+}
+
+.nombre{
+  color: red;
+}
