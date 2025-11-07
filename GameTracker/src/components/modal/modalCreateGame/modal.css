@@ -1,8 +1,6 @@
 body.active-modal {
           overflow-y: hidden;
         }
-
-        /* Botón principal brutalist */
         .btn-modal {
           padding: 15px 40px;
           font-size: 18px;
@@ -45,7 +43,6 @@ body.active-modal {
           left: 100%;
         }
 
-        /* Modal y overlay */
         .modal {
           width: 100vw;
           height: 100vh;
@@ -79,7 +76,6 @@ body.active-modal {
           }
         }
 
-        /* Contenido del modal */
         .modal-content {
           position: absolute;
           top: 50%;
@@ -107,7 +103,6 @@ body.active-modal {
           }
         }
 
-        /* Header del modal */
         .modal-header {
           display: flex;
           justify-content: space-between;
@@ -125,7 +120,6 @@ body.active-modal {
           letter-spacing: 2px;
         }
 
-        /* Botón cerrar */
         .close-btn {
           background: #ef4444;
           border: 3px solid #fff;
@@ -152,12 +146,10 @@ body.active-modal {
           box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
         }
 
-        /* Body del modal */
         .modal-body {
           padding: 2rem;
         }
 
-        /* Grid de inputs */
         .inputs-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -171,7 +163,6 @@ body.active-modal {
           }
         }
 
-        /* Input container brutalist */
         .brutalist-container {
           position: relative;
           width: 100%;
@@ -236,7 +227,6 @@ body.active-modal {
           background-color: #4a90e2;
         }
 
-        /* Footer del modal */
         .modal-footer {
           display: flex;
           justify-content: center;
@@ -244,7 +234,6 @@ body.active-modal {
           padding: 0 2rem 2rem 2rem;
         }
 
-        /* Botones de acción */
         .action-button {
           padding: 15px 40px;
           font-size: 16px;
@@ -277,7 +266,6 @@ body.active-modal {
           color: #000;
         }
 
-        /* Select brutalist */
         .brutalist-select {
           width: 100%;
           padding: 15px;

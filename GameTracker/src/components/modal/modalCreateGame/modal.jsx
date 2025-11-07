@@ -46,7 +46,6 @@ export default function Modal() {
 
 
         toggleModal();
-        // Aquí llamarías a tu API
     };
 
     if (modal) {
@@ -68,7 +67,7 @@ export default function Modal() {
                 <ToastContainer 
                 toasts={toasts} 
                 onRemove={removeToast}
-                position="top-right" // Opcional: 'top-left', 'bottom-right', etc.
+                position="top-right"
                 />
                 <div className="modal-header">
                     <h2>Add Videogame</h2>
