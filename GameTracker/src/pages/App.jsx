@@ -1,93 +1,170 @@
-import {useState, useEffect} from 'react'
+import { useState } from "react";
 import "../styles/App.css"
-import GameCard from "../components/cards/card"
-import Modal from "../components/modal/modal"
-import Success from '../components/notify/success/success'
-import Error from '../components/notify/error/error'
-import Warning from '../components/notify/warning/warning'
-import Input from '../components/inputs/text/formInput'
+import GameCard from "../components/cards/card";
+import {useGames} from '../hooks/useGames'
+import { useReview } from "../hooks/useReview";
+import ModalGames from "../components/modal/modalCreateGame/ModalGames";
+import ModalReview from "../components/modal/modalCreateReview/ModalReview";
+import useToast  from '../hooks/useToast';
+import ToastContainer from "../components/toast/ToastContainer";
+import { dateFormat } from "../utils/dateFormat";
 
 function App(){
-const [games, setGames] = useState([])
-const [title,setTitle] = useState(null)
-const [achieve,setAchieve] = useState(null)
-const API_url = "http://localhost:3000/games"
+const { toasts, removeToast, success, errorT, warning, info, loadingT ,dismissLoading  } = useToast();
+const { games, deleteGame , refresh, error, removeGame } = useGames();
+const { reviews} = useReview()
+const [activeTab, setActiveTab] = useState('juegos');
+const [reviewFilter, setReviewFilter] = useState('hechas');
 
-
-useEffect(() => {
-
-  fetch(API_url)
-  .then(res => res.json())
-  .then(data => setGames(data))
-
-}, [] )
-
-
-const createGame = () =>{
-  const newGame = {
-    title: title,
-    totalAchievements: achieve
+  const handleUpdate = (id) => {
+    success('Juego borrado')
   }
 
-  fetch(API_url,{
-  method: "POST",
-  headers: {"Content-Type" : "application/json"},
-  body: JSON.stringify(newGame)
-})
-    .then(res => res.json())
-    .then(data => {
-      setGames([...games, data])
-      setTitle("")
-      setAchieve("")
-    })
-}
+  const handleDeleteGame = (id) => {
+    deleteGame(id)
+    success("Borrado con exito")
+  } 
 
-const eliminarGame = (id) => {
-  console.log(`${API_url}/${id}`)
-  fetch(`${API_url}/${id}`,{
-    method: "DELETE"
-  })
-    .then( () => {
-      games.filter(game => game.id !== id)
-    })
-}
-
-
-  return(
+  return (
     <>
-      <Modal />
-      <div className='form'>
-        <h2>agregar juegos</h2>
-
-        <input 
-        type="text" 
-        placeholder='Nombre del juego'
-        value={title}
-        onChange={e => setTitle(e.target.value)}
+      <div className="container">
+        <ToastContainer 
+        toasts={toasts} 
+        onRemove={removeToast}
+        position="top-right"
         />
+        <div className="profile-card">
+          <div className="header">
+            <div className="profile-section">
+              <div className="profile-photo">
+                <svg className="profile-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              
+              <div className="user-info">
+                <h2>Usuario</h2>
+                <p>user@email.com</p>
+                <p>Miembro desde: 2024</p>
+              </div>
+            </div>
 
-        <input 
-        type="number" 
-        placeholder='Logros del juego'
-        value={achieve}
-        onChange={e => setAchieve(e.target.value)}
-        />
+            <div className="right-section">
+              {activeTab === 'juegos' ? <ModalGames /> : <ModalReview />}
+              <div className="tabs">
+                <button
 
-        <button onClick={createGame}>Gaurdar</button>
+                  className={`tab-btn ${activeTab === 'juegos' ? 'active' : 'inactive'}`}
+                  onClick={() => setActiveTab('juegos')}
+                >
+                  Juegos
+                </button>
+                <button
+                  className={`tab-btn ${activeTab === 'reseñas' ? 'active' : 'inactive'}`}
+                  onClick={() => setActiveTab('reseñas')}
+                >
+                  Reseñas
+                </button>
+              </div>
+
+              <div className="content-area">
+                {activeTab === 'juegos' ? (
+                  <div className="games-grid">
+                    {games.map((game) => (
+                      <GameCard 
+                      key = {game._id}
+                      id={game._id}
+                      title={game.title} 
+                      desc= {game.description} 
+                      date= {dateFormat(game.createdAt)}
+                      genres= {game.genres}
+                      platform={game.platform}
+                      handleDeleteGame={handleDeleteGame}
+                      handleUpdate={handleUpdate}/>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="reviews-section">
+                    <div className="review-filters">
+                      <button
+                        className={`filter-btn ${reviewFilter === 'hechas' ? 'active' : 'inactive'}`}
+                        onClick={() => setReviewFilter('hechas')}
+                      >
+                        Reseñas Hechas
+                      </button>
+                      <button
+                        className={`filter-btn ${reviewFilter === 'globales' ? 'active' : 'inactive'}`}
+                        onClick={() => setReviewFilter('globales')}
+                      >
+                        Reseñas Globales
+                      </button>
+                    </div>
+
+                    <div className="reviews-list">
+                      {reviewFilter === 'hechas' ? (
+                        reviews.map((review) => (
+                          <div key={review.id} className="review-card">
+                            <div className="review-header">
+                              <div className="review-info">
+                                <h3>{review.game}</h3>
+                                <div className="rating">
+                                  {[...Array(5)].map((_, i) => (
+                                    <span key={i}>
+                                      {i < review.rating ? '★' : '☆'}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="review-actions">
+                                <button className="action-btn edit-btn">
+                                  <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                  </svg>
+                                  Edit
+                                </button>
+                                <button className="action-btn delete-btn">
+                                  <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                  </svg>
+                                  Del
+                                </button>
+                              </div>
+                            </div>
+                            <p className="review-comment">{review.comment}</p>
+                          </div>
+                        ))
+                      ) : (
+                        globalReviews.map((review) => (
+                          <div key={review.id} className="review-card">
+                            <div className="review-header">
+                              <div className="review-info">
+                                <div className="review-meta">
+                                  <h3>{review.game}</h3>
+                                  <span className="review-user">por {review.user}</span>
+                                </div>
+                                <div className="rating">
+                                  {[...Array(5)].map((_, i) => (
+                                    <span key={i}>
+                                      {i < review.rating ? '★' : '☆'}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <p className="review-comment">{review.comment}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <ul>
-        {games.map((game) => (
-          <li key={game._id}>
-            {game.title}
-            {game.totalAchievements}
-
-            <button onClick={eliminarGame}>Eliminar</button>
-            </li>
-            
-        ))}
-      </ul>
-      
     </>
   )
 }

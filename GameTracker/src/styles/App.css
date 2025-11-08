@@ -1,23 +1,333 @@
-gametracker *{
-
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-body{
+body {
   font-family: monospace;
-  font-weight: bold;
 }
 
-.container{
+.container {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 2rem;
+}
+
+.profile-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border: 4px solid #000;
+  box-shadow: 8px 8px 0 #000;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-photo {
+  width: 176px;
+  height: 176px;
+  background-color: #fff;
+  border: 4px solid #000;
+  box-shadow: 5px 5px 0 #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: grey;
-  color: white;
-  border-radius: 20px;
 }
 
-.nombre{
-  color: red;
+.profile-icon {
+  width: 80px;
+  height: 80px;
+  fill: #000;
+}
+
+.user-info {
+  width: 176px;
+  background-color: #fff;
+  border: 4px solid #000;
+  box-shadow: 5px 5px 0 #000;
+  padding: 1rem;
+  text-align: center;
+}
+
+.user-info h2 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.user-info p {
+  font-size: 0.875rem;
+  color: #000;
+  margin: 0.25rem 0;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.brutalist-btn {
+  position: relative;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+  color: #000;
+  background-color: #fff;
+  border: 4px solid #000;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 5px 5px 0 #000, 10px 10px 0 #4a90e2;
+  overflow: hidden;
+}
+
+.brutalist-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 #000, 6px 6px 0 #4a90e2;
+}
+
+.brutalist-btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 #000;
+}
+
+.brutalist-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.brutalist-btn:hover::before {
+  left: 100%;
+}
+
+.add-game-btn {
+  margin-bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 15px 40px;
+  border: 4px solid #000;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.tab-btn.active {
+  background-color: #4a90e2;
+  color: #fff;
+  box-shadow: 5px 5px 0 #000;
+  transform: translate(-2px, -2px);
+}
+
+.tab-btn.inactive {
+  background-color: #fff;
+  color: #000;
+  box-shadow: 3px 3px 0 #000;
+}
+
+.tab-btn.inactive:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.content-area {
+  border: 4px solid #000;
+  min-height: 384px;
+  background-color: #fff;
+  box-shadow: 8px 8px 0 #000;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+
+.reviews-section {
+  padding: 1.5rem;
+}
+
+.review-filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-btn {
+  padding: 12px 24px;
+  border: 3px solid #000;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.filter-btn.active {
+  background-color: #000;
+  color: #fff;
+  box-shadow: 4px 4px 0 #4a90e2;
+}
+
+.filter-btn.inactive {
+  background-color: #fff;
+  color: #000;
+  box-shadow: 3px 3px 0 #000;
+}
+
+.filter-btn.inactive:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-card {
+  background-color: #fff;
+  border: 4px solid #000;
+  padding: 1.5rem;
+  box-shadow: 6px 6px 0 #000;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.review-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #000;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid #000;
+}
+
+.review-info h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-user {
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.rating {
+  display: flex;
+  gap: 0.25rem;
+  font-size: 1.25rem;
+}
+
+.rating span {
+  color: #000;
+}
+
+.review-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border: 3px solid #000;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: bold;
+  font-family: monospace;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.edit-btn {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.review-comment {
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-plus {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
 }
