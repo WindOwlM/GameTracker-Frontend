@@ -1,10 +1,10 @@
 import { useState } from "react";
-import "./modal.css";
+import "./modalGames.css";
 import { useGames } from "../../../hooks/useGames";
 import ToastContainer from "../../toast/ToastContainer";
 import useToast from "../../../hooks/useToast";
 
-export default function Modal() {
+export default function ModalGames() {
     const { toasts, removeToast, success, errorT, warning, info, loadingT ,dismissLoading  } = useToast();
     const {createGame} = useGames()
     const [modal, setModal] = useState(false);
@@ -16,7 +16,7 @@ export default function Modal() {
         developer: '',
         coverImage: '',
         description: '',
-        completado: false
+        completed: false
     });
 
     const toggleModal = () => {
@@ -163,6 +163,19 @@ export default function Modal() {
                     </div>
 
                     </div>
+
+                    <div className="brutalist-container" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+                    <input 
+                    type="checkbox" 
+                    name="completed"
+                    checked={formData.completed}
+                    onChange={(e) => setFormData({...formData, completed: e.target.checked})}
+                    style={{width: '24px', height: '24px', cursor: 'pointer'}}
+                    />
+                    <label htmlFor="completed" style={{fontWeight: 'bold', cursor: 'pointer'}}>
+                        ¿Juego completado?
+                    </label>
+                </div>
                 </div>
 
                 <div className="modal-footer">
