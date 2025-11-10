@@ -16,7 +16,7 @@ const { reviews} = useReview()
 const [activeTab, setActiveTab] = useState('juegos');
 const [reviewFilter, setReviewFilter] = useState('hechas');
 
-  const handleUpdate = (id) => {
+  const handleEditGame = (id) => {
     success('Juego borrado')
   }
 
@@ -77,10 +77,11 @@ const [reviewFilter, setReviewFilter] = useState('hechas');
                       title={game.title} 
                       desc= {game.description} 
                       date= {dateFormat(game.createdAt)}
+                      image={game.coverImage}
                       genres= {game.genres}
                       platform={game.platform}
                       handleDeleteGame={handleDeleteGame}
-                      handleUpdate={handleUpdate}/>
+                      handleEditGame={handleEditGame}/>
                     ))}
                   </div>
                 ) : (
