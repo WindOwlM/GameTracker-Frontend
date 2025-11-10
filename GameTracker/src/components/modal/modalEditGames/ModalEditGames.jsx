@@ -1,12 +1,12 @@
 import { useState } from "react";
-import "./modalGames.css";
+import "./modalEditGames.css";
 import { useGames } from "../../../hooks/useGames";
 import ToastContainer from "../../toast/ToastContainer";
 import useToast from "../../../hooks/useToast";
 
-export default function ModalGames() {
+export default function ModalEditGames(title,genres,platform,released,developer,coverImage,description,completed) {
     const { toasts, removeToast, success, errorT, warning, info, loadingT ,dismissLoading  } = useToast();
-    const {createGame} = useGames()
+    const {editGame} = useGames()
     const [modal, setModal] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
@@ -18,6 +18,8 @@ export default function ModalGames() {
         description: '',
         completed: false
     });
+
+    setFormData({[title]: title})
 
     const toggleModal = () => {
         setModal(!modal);
@@ -32,7 +34,7 @@ export default function ModalGames() {
 
     const submit = async (e) => {
         e.preventDefault();
-        const {loadingId} = loadingT("Creando juego")
+        const {loadingId} = loadingT("Actualizando juego")
         alert("Formulario enviado");
         console.log(formData);
 
@@ -57,7 +59,7 @@ export default function ModalGames() {
     return (
         <>
             <button className="btn-modal" onClick={toggleModal}>
-            Agregar juego
+            Edit
             </button>
 
             {modal && (
@@ -87,7 +89,7 @@ export default function ModalGames() {
                         className="brutalist-input" 
                         onChange={handleChange}
                         />
-                        <label className="brutalist-label">Título del juego</label>
+                        <label className="brutalist-label">Título del juego {formData.title}</label>
                     </div>
 
                     <div className="brutalist-container">

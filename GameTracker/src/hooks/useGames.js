@@ -40,6 +40,21 @@ export const useGames = () => {
         }
     };
 
+    const editGame = async (id,body) => {
+        setError(null)
+        try {
+            const updatedGame = await gamesAPI.patch(id,body)
+            setGames(prev => prev.map(game => 
+                game._id === id ? updatedGame : game
+            ))
+            return updatedGame
+        } catch (err) {
+            setError(err.message)
+            console.error('Error al actualizar:', err)
+            throw err
+        }
+    }
+
     const deleteGame = async (id) => {
         setError(null)
     
@@ -48,7 +63,7 @@ export const useGames = () => {
             setGames(prev => prev.filter(game => 
                 game._id !== id && game.id !== id
             ))
-        } catch (error) {
+        } catch (err) {
             setError(err.message)
             console.error('Error deleting game:', err)
             throw err
@@ -58,6 +73,7 @@ export const useGames = () => {
     return {
     games,
     createGame,
+    editGame,
     error,
     deleteGame,
     }
