@@ -1,37 +1,41 @@
-import { useState } from "react";
+import { useState } from "react"
 import "../styles/App.css"
-import GameCard from "../components/cards/card";
+import GameCard from "../components/cards/card"
 import {useGames} from '../hooks/useGames'
-import { useReview } from "../hooks/useReview";
-import ModalGames from "../components/modal/modalCreateGame/ModalGames";
-import ModalReview from "../components/modal/modalCreateReview/ModalReview";
-import useToast  from '../hooks/useToast';
-import ToastContainer from "../components/toast/ToastContainer";
-import { dateFormat } from "../utils/dateFormat";
+import { useReview } from "../hooks/useReview"
+import ModalGames from "../components/modal/modalCreateGame/ModalGames"
+import ModalReview from "../components/modal/modalCreateReview/ModalReview"
+import useToast  from '../hooks/useToast'
+import ToastContainer from "../components/toast/ToastContainer"
+import { dateFormat } from "../utils/dateFormat"
 
 function App(){
-const { toasts, removeToast, success, errorT, warning, info, loadingT ,dismissLoading  } = useToast();
-const { games, deleteGame , refresh, error, removeGame } = useGames();
-const { reviews} = useReview()
-const [activeTab, setActiveTab] = useState('juegos');
-const [reviewFilter, setReviewFilter] = useState('hechas');
+  const { toasts, removeToast, success, errorT, warning, info, loadingT, dismissLoading } = useToast()
+  const { games, deleteGame, refresh, error } = useGames()
+  const { reviews } = useReview()
+  const [activeTab, setActiveTab] = useState('juegos')
+  const [reviewFilter, setReviewFilter] = useState('hechas')
 
-  const handleEditGame = (id) => {
-    success('Juego borrado')
-  }
-
-  const handleDeleteGame = (id) => {
-    deleteGame(id)
-    success("Borrado con exito")
+  const handleDeleteGame = async (id) => {
+    const loadingId = loadingT("Eliminando juego...")
+    
+    try {
+      await deleteGame(id)
+      dismissLoading(loadingId)
+      success("Juego eliminado con éxito")
+    } catch (error) {
+      dismissLoading(loadingId)
+      errorT("Error al eliminar el juego")
+    }
   } 
 
   return (
     <>
       <div className="container">
         <ToastContainer 
-        toasts={toasts} 
-        onRemove={removeToast}
-        position="top-right"
+          toasts={toasts} 
+          onRemove={removeToast}
+          position="top-right"
         />
         <div className="profile-card">
           <div className="header">
@@ -51,9 +55,9 @@ const [reviewFilter, setReviewFilter] = useState('hechas');
 
             <div className="right-section">
               {activeTab === 'juegos' ? <ModalGames /> : <ModalReview />}
+              
               <div className="tabs">
                 <button
-
                   className={`tab-btn ${activeTab === 'juegos' ? 'active' : 'inactive'}`}
                   onClick={() => setActiveTab('juegos')}
                 >
@@ -70,19 +74,29 @@ const [reviewFilter, setReviewFilter] = useState('hechas');
               <div className="content-area">
                 {activeTab === 'juegos' ? (
                   <div className="games-grid">
-                    {games.map((game) => (
-                      <GameCard 
-                      key = {game._id}
-                      id={game._id}
-                      title={game.title} 
-                      desc= {game.description} 
-                      date= {dateFormat(game.createdAt)}
-                      image={game.coverImage}
-                      genres= {game.genres}
-                      platform={game.platform}
-                      handleDeleteGame={handleDeleteGame}
-                      handleEditGame={handleEditGame}/>
-                    ))}
+                    {games.length === 0 ? (
+                      <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '2rem'}}>
+                        <p>No hay juegos todavía. ¡Agrega tu primer juego!</p>
+                      </div>
+                    ) : (
+                      games.map((game) => (
+                        <GameCard 
+                          key={game._id}
+                          id={game._id}
+                          title={game.title} 
+                          desc={game.description} 
+                          date={dateFormat(game.createdAt)}
+                          image={game.coverImage}
+                          genres={game.genres}
+                          platform={game.platform}
+                          developer={game.developer}
+                          released={game.released}
+                          coverImage={game.coverImage}
+                          completed={game.completed}
+                          handleDeleteGame={handleDeleteGame}
+                        />
+                      ))
+                    )}
                   </div>
                 ) : (
                   <div className="reviews-section">
@@ -103,60 +117,49 @@ const [reviewFilter, setReviewFilter] = useState('hechas');
 
                     <div className="reviews-list">
                       {reviewFilter === 'hechas' ? (
-                        reviews.map((review) => (
-                          <div key={review.id} className="review-card">
-                            <div className="review-header">
-                              <div className="review-info">
-                                <h3>{review.game}</h3>
-                                <div className="rating">
-                                  {[...Array(5)].map((_, i) => (
-                                    <span key={i}>
-                                      {i < review.rating ? '★' : '☆'}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                              <div className="review-actions">
-                                <button className="action-btn edit-btn">
-                                  <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                  </svg>
-                                  Edit
-                                </button>
-                                <button className="action-btn delete-btn">
-                                  <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                  </svg>
-                                  Del
-                                </button>
-                              </div>
-                            </div>
-                            <p className="review-comment">{review.comment}</p>
+                        reviews.length === 0 ? (
+                          <div style={{textAlign: 'center', padding: '2rem'}}>
+                            <p>No has hecho reseñas todavía</p>
                           </div>
-                        ))
-                      ) : (
-                        globalReviews.map((review) => (
-                          <div key={review.id} className="review-card">
-                            <div className="review-header">
-                              <div className="review-info">
-                                <div className="review-meta">
+                        ) : (
+                          reviews.map((review) => (
+                            <div key={review.id} className="review-card">
+                              <div className="review-header">
+                                <div className="review-info">
                                   <h3>{review.game}</h3>
-                                  <span className="review-user">por {review.user}</span>
+                                  <div className="rating">
+                                    {[...Array(5)].map((_, i) => (
+                                      <span key={i}>
+                                        {i < review.rating ? '★' : '☆'}
+                                      </span>
+                                    ))}
+                                  </div>
                                 </div>
-                                <div className="rating">
-                                  {[...Array(5)].map((_, i) => (
-                                    <span key={i}>
-                                      {i < review.rating ? '★' : '☆'}
-                                    </span>
-                                  ))}
+                                <div className="review-actions">
+                                  <button className="action-btn edit-btn">
+                                    <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Edit
+                                  </button>
+                                  <button className="action-btn delete-btn">
+                                    <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <polyline points="3 6 5 6 21 6"></polyline>
+                                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Del
+                                  </button>
                                 </div>
                               </div>
+                              <p className="review-comment">{review.comment}</p>
                             </div>
-                            <p className="review-comment">{review.comment}</p>
-                          </div>
-                        ))
+                          ))
+                        )
+                      ) : (
+                        <div style={{textAlign: 'center', padding: '2rem'}}>
+                          <p>No hay reseñas globales todavía</p>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -170,4 +173,4 @@ const [reviewFilter, setReviewFilter] = useState('hechas');
   )
 }
 
-export default App;
+export default App

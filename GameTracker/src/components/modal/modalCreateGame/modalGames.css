@@ -1,6 +1,7 @@
-body.active-modal {
+.active-modal {
   overflow-y: hidden;
 }
+
 .btn-modal {
   padding: 15px 40px;
   font-size: 18px;
@@ -18,14 +19,13 @@ body.active-modal {
   margin-bottom: 30px;
 }
 
-.btn-modal:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 3px 3px 0 #000, 6px 6px 0 #4a90e2;
+.btn-modal.btn-edit {
+  all: unset;
+  cursor: pointer;
 }
 
-.btn-modal:active {
-  transform: translate(5px, 5px);
-  box-shadow: 0 0 0 #000;
+.btn-modal.btn-edit::before {
+  display: none;
 }
 
 .btn-modal::before {
@@ -51,7 +51,7 @@ body.active-modal {
   right: 0;
   bottom: 0;
   position: fixed;
-  z-index: 1000;
+  z-index: 9998;
 }
 
 .overlay {
@@ -64,7 +64,7 @@ body.active-modal {
   position: fixed;
   background: rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.3s ease;
-  z-index: 1001;
+  z-index: 1;
 }
 
 @keyframes fadeIn {
@@ -89,7 +89,7 @@ body.active-modal {
   box-shadow: 12px 12px 0 #000, 24px 24px 0 #4a90e2;
   animation: slideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   font-family: monospace;
-  z-index: 1002;
+  z-index: 10001;
 }
 
 @keyframes slideIn {
@@ -222,7 +222,9 @@ body.active-modal {
   letter-spacing: 1px;
 }
 
-.brutalist-input:focus + .brutalist-label {
+.brutalist-input:focus + .brutalist-label,
+.brutalist-select:focus + .brutalist-label,
+.brutalist-textarea:focus + .brutalist-label {
   transform: rotate(0deg) scale(1.05);
   background-color: #4a90e2;
 }
