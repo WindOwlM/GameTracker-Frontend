@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react"
 import "./modalGames.css"
 import { useGames } from "../../../hooks/useGames"
-import useToast from "../../../hooks/useToast"
 
 export default function ModalGames({ gameData = null, gameId = null, buttonText = "Agregar juego" }) {
-    const { success, errorT, warning, loadingT, dismissLoading } = useToast()
     const { createGame, editGame } = useGames()
     const [modal, setModal] = useState(false)
     const isEditMode = !!gameData
@@ -61,21 +59,15 @@ export default function ModalGames({ gameData = null, gameId = null, buttonText 
         e.preventDefault()
 
         if (!formData.title || !formData.genres || !formData.platform) {
-            warning('Por favor completa los campos obligatorios: Título, Género y Plataforma')
+            alert('Por favor completa los campos obligatorios: Título, Género y Plataforma')
             return
         }
-
-        const loadingId = loadingT(isEditMode ? "Actualizando juego..." : "Creando juego...")
         
         try {
             if (isEditMode) {
                 await editGame(gameId, formData)
-                dismissLoading(loadingId)
-                success('¡Juego actualizado exitosamente! ✅')
             } else {
                 await createGame(formData)
-                dismissLoading(loadingId)
-                success('¡Juego creado exitosamente! 🎮')
                 
                 setFormData({
                     title: '',
@@ -91,8 +83,7 @@ export default function ModalGames({ gameData = null, gameId = null, buttonText 
             
             toggleModal()
         } catch (error) {
-            dismissLoading(loadingId)
-            errorT(error.message || 'Error al procesar la solicitud')
+            console.log(error.message || 'Error al procesar la solicitud')
         }
     }
 

@@ -5,38 +5,25 @@ import {useGames} from '../hooks/useGames'
 import { useReview } from "../hooks/useReview"
 import ModalGames from "../components/modal/modalCreateGame/ModalGames"
 import ModalReview from "../components/modal/modalCreateReview/ModalReview"
-import useToast  from '../hooks/useToast'
-import ToastContainer from "../components/toast/ToastContainer"
 import { dateFormat } from "../utils/dateFormat"
 
 function App(){
-  const { toasts, removeToast, success, errorT, warning, info, loadingT, dismissLoading } = useToast()
   const { games, deleteGame, refresh, error } = useGames()
   const { reviews } = useReview()
   const [activeTab, setActiveTab] = useState('juegos')
   const [reviewFilter, setReviewFilter] = useState('hechas')
 
   const handleDeleteGame = async (id) => {
-    const loadingId = loadingT("Eliminando juego...")
-    
     try {
       await deleteGame(id)
-      dismissLoading(loadingId)
-      success("Juego eliminado con éxito")
     } catch (error) {
-      dismissLoading(loadingId)
-      errorT("Error al eliminar el juego")
+      console.log(error.message)
     }
   } 
 
   return (
     <>
       <div className="container">
-        <ToastContainer 
-          toasts={toasts} 
-          onRemove={removeToast}
-          position="top-right"
-        />
         <div className="profile-card">
           <div className="header">
             <div className="profile-section">
