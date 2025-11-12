@@ -24,20 +24,36 @@ export const reviewAPI = {
         }
     },
     
-    create: async (gameData) => {
+    create: async (reviewData) => {
         try {
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify(gameData),
+            body: JSON.stringify(reviewData),
         });
         return handleResponse(response);
         } catch (error) {
         return handleError(error);
         }
     },
+
+    patch: async (gameId, reviewData) => {  
+        try {
+        const response = await fetch(`${API_URL}/${gameId}`, {
+            method: 'PATCH',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reviewData),
+        });
+        return handleResponse(response);
+        } catch (error) {
+        return handleError(error);
+        }
+    },
+
     delete: async (id) => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
