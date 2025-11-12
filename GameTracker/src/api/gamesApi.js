@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/games';
+const API_URL = 'https://gametracker-backend-yqzs.onrender.com/games';
 
 const handleResponse = async (response) => {
     if (!response.ok) {
