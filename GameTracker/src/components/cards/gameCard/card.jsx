@@ -1,5 +1,5 @@
 import './card.css'
-import ModalGames from '../modal/modalCreateGame/ModalGames'
+import ModalGames from '../../modal/modalCreateGame/ModalGames'
 
 export function GameCard({id, title, desc, date, genres, platform, image, developer, released, coverImage, completed, handleDeleteGame}) {
 
@@ -35,6 +35,18 @@ export function GameCard({id, title, desc, date, genres, platform, image, develo
             <div className="game-detail-item">
               <span className="game-detail-label">PLATAFORMA:</span>
               <span>{platform}</span>
+            </div>
+            <div className="game-detail-item">
+              <span className="game-detail-label">DESCRIPCION:</span>
+              <span>{desc}</span>
+            </div>
+            <div className="game-detail-item">
+              <span className="game-detail-label">DESARROLLADOR:</span>
+              <span>{developer}</span>
+            </div>
+            <div className="game-detail-item">
+              <span className="game-detail-label">COMPLETADO:</span>
+              <span>{completed ? "Completado" : "Sin completar"}</span>
             </div>
           </div>
           <div className="game-card-actions">
