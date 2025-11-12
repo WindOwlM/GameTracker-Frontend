@@ -17,10 +17,35 @@ export const reviewAPI = {
 
     getAll: async () => {
         try {
-        const response = await fetch(API_URL);
+        const response = await fetch(`${API_URL}/6904e48d10dcfca0449d3361`);
         return handleResponse(response);
         } catch (error) {
         return handleError(error);
         }
+    },
+    
+    create: async (gameData) => {
+        try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(gameData),
+        });
+        return handleResponse(response);
+        } catch (error) {
+        return handleError(error);
+        }
+    },
+    delete: async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE',
+        });
+        return handleResponse(response);
+    } catch (error) {
+    return handleError(error);
+    }
     },
 }
