@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import "./modalGames.css"
 import { useGames } from "../../../hooks/useGames"
 
-export default function ModalGames({ gameData = null, gameId = null, buttonText = "Agregar juego" }) {
+export default function ModalGames({ gameData = null, gameId = null, buttonText = "Agregar juego",onUpdate }) {
     const { createGame, editGame } = useGames()
     const [modal, setModal] = useState(false)
     const isEditMode = !!gameData
@@ -80,7 +80,9 @@ export default function ModalGames({ gameData = null, gameId = null, buttonText 
                     completed: false
                 })
             }
-            
+            if (onUpdate){
+                await onUpdate()
+            }
             toggleModal()
         } catch (error) {
             console.log(error.message || 'Error al procesar la solicitud')

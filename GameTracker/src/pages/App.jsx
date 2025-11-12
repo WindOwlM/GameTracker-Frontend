@@ -6,10 +6,10 @@ import {useGames} from '../hooks/useGames'
 import { useReview } from "../hooks/useReview"
 import ModalGames from "../components/modal/modalCreateGame/ModalGames"
 import ModalReview from "../components/modal/modalCreateReview/ModalReview"
-import { dateFormat } from "../utils/dateFormat"
+import { dateFormat, yearFormat } from "../utils/dateFormat"
 
 function App(){
-  const { games, deleteGame } = useGames()
+  const { games, deleteGame, fetchGames } = useGames()
   const { reviews, deleteReview, fetchReview } = useReview()
   const [activeTab, setActiveTab] = useState('juegos')
   const [reviewFilter, setReviewFilter] = useState('hechas')
@@ -50,7 +50,7 @@ function App(){
             </div>
 
             <div className="right-section">
-              {activeTab === 'juegos' ? <ModalGames /> : <ModalReview onUpdate={fetchReview} />}
+              {activeTab === 'juegos' ? <ModalGames onUpdate={fetchGames} /> : <ModalReview onUpdate={fetchReview} />}
               
               <div className="tabs">
                 <button
@@ -86,9 +86,10 @@ function App(){
                           genres={game.genres}
                           platform={game.platform}
                           developer={game.developer}
-                          released={game.released}
+                          released={yearFormat(game.released)}
                           coverImage={game.coverImage}
                           completed={game.completed}
+                          onUpdate={fetchGames}
                           handleDeleteGame={handleDeleteGame}
                         />
                       ))

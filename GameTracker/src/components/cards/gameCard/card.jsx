@@ -1,7 +1,7 @@
 import './card.css'
 import ModalGames from '../../modal/modalCreateGame/ModalGames'
 
-export function GameCard({id, title, desc, date, genres, platform, image, developer, released, coverImage, completed, handleDeleteGame}) {
+export function GameCard({id, title, desc, date, genres, platform, image, developer, released, coverImage, completed, handleDeleteGame,onUpdate}) {
 
   const gameData = {
     title,
@@ -45,6 +45,10 @@ export function GameCard({id, title, desc, date, genres, platform, image, develo
               <span>{developer}</span>
             </div>
             <div className="game-detail-item">
+              <span className="game-detail-label">A;O DE LANZAMIENTO:</span>
+              <span>{released}</span>
+            </div>
+            <div className="game-detail-item">
               <span className="game-detail-label">COMPLETADO:</span>
               <span>{completed ? "Completado" : "Sin completar"}</span>
             </div>
@@ -53,6 +57,7 @@ export function GameCard({id, title, desc, date, genres, platform, image, develo
             <ModalGames 
               gameData={gameData}
               gameId={id}
+              onUpdate={onUpdate}
               buttonText={
                 <div className="game-action-btn game-edit-btn">
                   <svg className="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

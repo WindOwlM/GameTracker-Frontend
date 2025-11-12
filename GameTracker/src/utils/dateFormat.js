@@ -9,3 +9,13 @@ export const dateFormat = (dateString) => {
     const formattedDate = new Intl.DateTimeFormat('es-ES', options).format(dateObject);
     return formattedDate
 }
+
+export const yearFormat = (dateString) => {
+    const dateObject = new Date(dateString)
+    const options = {
+        year: 'numeric',
+    };
+
+    const formattedDate = new Intl.DateTimeFormat('es-ES', options).format(dateObject);
+    return formattedDate
+}

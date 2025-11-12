@@ -70,6 +70,7 @@ export const useGames = () => {
 
     return {
     games,
+    fetchGames,
     createGame,
     editGame,
     error,
