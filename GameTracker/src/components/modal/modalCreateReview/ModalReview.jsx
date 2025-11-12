@@ -1,22 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./modalReview.css";
 import { useGames } from "../../../hooks/useGames";
-import ToastContainer from "../../toast/ToastContainer";
-import useToast from "../../../hooks/useToast";
+import { useReview } from "../../../hooks/useReview";
 
 export default function ModalReview() {
-    const { toasts, removeToast, success, errorT, warning, info, loadingT ,dismissLoading  } = useToast();
-    const {createGame} = useGames()
+    const {createGame,games} = useGames()
+    const {createReview} = useReview()
     const [hoveredStar, setHoveredStar] = useState(0)
     const [modal, setModal] = useState(false);
     const [formData, setFormData] = useState({
         user_id: '6904e48d10dcfca0449d3361',
-        score: '',
+        game_id: '',
+        rating: '',
         review: '',
         hoursPlayed: '',
         difficulty: '',
-        recommend: '',
+        recommend: false,
     });
+
+    const [storedGames,setStoredGame] = useState({
+        game_id: '',
+        title: '',
+    })
+
+    useEffect(() => {
+        setStoredGame(games.map(g => ({
+            game_id :g._id,
+            title: g.title
+        })));
+    }, [games]);
 
     const handleStarClick = (rating) => {
         setFormData({
@@ -39,17 +51,14 @@ export default function ModalReview() {
     };
 
     const submit = async (e) => {
+
         e.preventDefault();
-        const {loadingId} = loadingT("Creando juego")
-        alert("Formulario enviado 🚀");
-        console.log(formData);
+        alert("Formulario enviado");
 
         try {
-            await createGame(formData)
-            dismissLoading(loadingId)
+            await createReview(formData)
         } catch (error) {
-            dismissLoading(loadingId)
-            errorT(error)
+            console.log(error)
         }
 
 
@@ -72,11 +81,6 @@ export default function ModalReview() {
             <div className="modal">
                 <div className="overlay" onClick={toggleModal}></div>
                 <div className="modal-content">
-                <ToastContainer 
-                toasts={toasts} 
-                onRemove={removeToast}
-                position="top-right"
-                />
                 <div className="modal-header">
                     <h2>Add Review</h2>
                     <button className="close-btn" onClick={toggleModal}>
@@ -107,88 +111,70 @@ export default function ModalReview() {
                     <div className="inputs-grid">
                     
                     <div className="brutalist-container">
-                        <input 
-                        type="text" 
-                        name="title"
-                        placeholder="ESCRIBE AQUÍ"
-                        className="brutalist-input" 
-                        onChange={handleChange}
-                        />
-                        <label className="brutalist-label">Título del juego</label>
-                    </div>
-                
-                    <div className="brutalist-container">
-                        <input 
-                        type="text" 
-                        name="genres"
-                        placeholder="ESCRIBE AQUÍ"
-                        className="brutalist-input" 
-                        onChange={handleChange}
-                        />
-                        <label className="brutalist-label">Género</label>
+                        <select 
+                            name="game_id"
+                            className="brutalist-select"
+                            value={formData.game_id}
+                            onChange={handleChange}
+                        >
+                            <option value="">SELECCIONAR</option>
+                            {storedGames.map((g) => (
+                                <option key={g.game_id} value={g.game_id}>{g.title}</option>
+                            ))}
+                        </select>
+                        <label className="brutalist-label">Juego</label>
                     </div>
 
                     <div className="brutalist-container">
                         <select 
-                        name="platform"
+                        name="difficulty"
                         className="brutalist-select"                        
                         onChange={handleChange}
                         >
                         <option value="">SELECCIONAR</option>
-                        <option value="PC">PC</option>
-                        <option value="PlayStation">PlayStation</option>
-                        <option value="Xbox">Xbox</option>
-                        <option value="Nintendo Switch">Nintendo Switch</option>
-                        <option value="Multi-plataforma">Multi-plataforma</option>
+                        <option value="easy">Facil</option>
+                        <option value="mid">Intermedio</option>
+                        <option value="hard">Hard</option>
                         </select>
-                        <label className="brutalist-label">Plataforma</label>
+                        <label className="brutalist-label">Dificultad</label>
                     </div>
 
                     <div className="brutalist-container">
                         <input 
                         type="number" 
-                        name="released"
-                        placeholder="2025"
+                        name="hoursPlayed"
+                        placeholder="100..."
                         className="brutalist-input" 
                         onChange={handleChange}
-                        min="1970"
-                        max="2030"
+                        min="0"
+                        max="1000"
                         />
-                        <label className="brutalist-label">Año de lanzamiento</label>
+                        <label className="brutalist-label">Horas Jugadas</label>
                     </div>
 
-                    <div className="brutalist-container">
+                    <div className="brutalist-container" style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                         <input 
-                        type="text" 
-                        name="developer"
-                        placeholder="ESCRIBE AQUÍ"
-                        className="brutalist-input" 
-                        onChange={handleChange}
+                            type="checkbox" 
+                            name="recommend"
+                            id="recommend"
+                            checked={formData.recommend}
+                            onChange={(e) => setFormData({...formData, recommend: e.target.checked})}
+                            style={{width: '24px', height: '24px', cursor: 'pointer'}}
                         />
-                        <label className="brutalist-label">Desarrollador</label>
-                    </div>
-
-                    <div className="brutalist-container">
-                        <input 
-                        type="url" 
-                        name="coverImage"
-                        placeholder="HTTPS://..."
-                        className="brutalist-input" 
-                        onChange={handleChange}
-                        />
-                        <label className="brutalist-label">Imagen Portada (URL)</label>
+                        <label htmlFor="recommend" style={{fontWeight: 'bold', cursor: 'pointer'}}>
+                            ¿Recomendarias el juego?
+                        </label>
                     </div>
 
                     <div className="brutalist-container textarea-container">
                         <textarea 
-                        name="description"
+                        name="review"
                         placeholder="DESCRIPCIÓN DEL JUEGO..."
                         className="brutalist-textarea"
                         onChange={handleChange}
                         />
-                        <label className="brutalist-label">Descripción</label>
+                        <label className="brutalist-label">Reseña</label>
                     </div>
-
                     </div>
                 </div>
 
