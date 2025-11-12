@@ -3,9 +3,10 @@ import "./modalReview.css";
 import { useGames } from "../../../hooks/useGames";
 import { useReview } from "../../../hooks/useReview";
 
-export default function ModalReview() {
-    const {createGame,games} = useGames()
-    const {createReview} = useReview()
+export default function ModalReview({ reviewData = null,title= null, gameId = null, buttonText = "Agregar review" , onUpdate}) {
+    const isEditMode = !!reviewData
+    const {games} = useGames()
+    const {createReview,editReview} = useReview()
     const [hoveredStar, setHoveredStar] = useState(0)
     const [modal, setModal] = useState(false);
     const [formData, setFormData] = useState({
@@ -23,6 +24,36 @@ export default function ModalReview() {
         title: '',
     })
 
+
+    useEffect(() => {
+        if (reviewData) {
+            setFormData({
+                user_id: '6904e48d10dcfca0449d3361',
+                game_id: reviewData.game_id || '',
+                rating: reviewData.rating || '',
+                review: reviewData.review || '',
+                hoursPlayed: reviewData.hoursPlayed || '',
+                difficulty: reviewData.difficulty || '',
+                recommend: reviewData.recommend || false
+            })
+        }
+    }, [reviewData])
+
+    const toggleModal = () => {
+        setModal(!modal)
+        if (modal && !reviewData) {
+            setFormData({
+                user_id: '6904e48d10dcfca0449d3361',
+                game_id: '',
+                rating: '',
+                review: '',
+                hoursPlayed: '',
+                difficulty: '',
+                recommend: false,
+            })
+        }
+    }
+
     useEffect(() => {
         setStoredGame(games.map(g => ({
             game_id :g._id,
@@ -39,10 +70,6 @@ export default function ModalReview() {
 
     const displayRating = hoveredStar || formData.rating
 
-    const toggleModal = () => {
-        setModal(!modal);
-    };
-
     const handleChange = (e) => {
         setFormData({
         ...formData,
@@ -52,17 +79,36 @@ export default function ModalReview() {
 
     const submit = async (e) => {
 
-        e.preventDefault();
-        alert("Formulario enviado");
+        e.preventDefault()
 
-        try {
-            await createReview(formData)
-        } catch (error) {
-            console.log(error)
+        if (!formData.game_id || !formData.rating || !formData.review) {
+            alert('Por favor completa los campos obligatorios: id del juego, valoracion y rese;a')
+            return
         }
+        
+        try {
+            if (isEditMode) {
+                await editReview(gameId, formData)
+            } else {
+                await createReview(formData)
+                setFormData({
+                    user_id: '6904e48d10dcfca0449d3361',
+                    game_id: '',
+                    rating: '',
+                    review: '',
+                    hoursPlayed: '',
+                    difficulty: '',
+                    recommend: false,
+                })
+            }
+            if (onUpdate){
+                await onUpdate()
+            }
 
-
-        toggleModal();
+            toggleModal()
+        } catch (error) {
+            console.log(error.message || 'Error al procesar la solicitud')
+        }
     };
 
     if (modal) {
@@ -73,8 +119,15 @@ export default function ModalReview() {
 
     return (
         <>
-            <button className="btn-modal" onClick={toggleModal}>
-            Agregar review
+            <button 
+                className={`btn-modal ${isEditMode ? 'btn-edit' : ''}`}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    toggleModal()
+                }}
+                type="button"
+            >
+                {buttonText}
             </button>
 
             {modal && (
@@ -82,7 +135,7 @@ export default function ModalReview() {
                 <div className="overlay" onClick={toggleModal}></div>
                 <div className="modal-content">
                 <div className="modal-header">
-                    <h2>Add Review</h2>
+                    <h2>{isEditMode ? 'Edit Review' : 'Add Review'}</h2>
                     <button className="close-btn" onClick={toggleModal}>
                     ×
                     </button>
@@ -111,6 +164,9 @@ export default function ModalReview() {
                     <div className="inputs-grid">
                     
                     <div className="brutalist-container">
+                        {isEditMode ?
+                        <h1>{title}</h1>
+                        : 
                         <select 
                             name="game_id"
                             className="brutalist-select"
@@ -121,14 +177,16 @@ export default function ModalReview() {
                             {storedGames.map((g) => (
                                 <option key={g.game_id} value={g.game_id}>{g.title}</option>
                             ))}
-                        </select>
+                        </select>}
+                        
                         <label className="brutalist-label">Juego</label>
                     </div>
 
                     <div className="brutalist-container">
                         <select 
                         name="difficulty"
-                        className="brutalist-select"                        
+                        className="brutalist-select"
+                        value={formData.difficulty}            
                         onChange={handleChange}
                         >
                         <option value="">SELECCIONAR</option>
@@ -146,6 +204,7 @@ export default function ModalReview() {
                         placeholder="100..."
                         className="brutalist-input" 
                         onChange={handleChange}
+                        value={formData.hoursPlayed}
                         min="0"
                         max="1000"
                         />
@@ -171,6 +230,7 @@ export default function ModalReview() {
                         name="review"
                         placeholder="DESCRIPCIÓN DEL JUEGO..."
                         className="brutalist-textarea"
+                        value={formData.review}
                         onChange={handleChange}
                         />
                         <label className="brutalist-label">Reseña</label>
@@ -191,7 +251,7 @@ export default function ModalReview() {
                     className="action-button submit-button"
                     onClick={submit}
                     >
-                    Enviar
+                    {isEditMode ? 'Actualizar' : 'Crear'}
                     </button>
                 </div>
 

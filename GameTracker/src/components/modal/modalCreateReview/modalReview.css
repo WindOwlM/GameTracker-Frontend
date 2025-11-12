@@ -1,4 +1,4 @@
-body.active-modal {
+.active-modal {
   overflow-y: hidden;
 }
 .btn-modal {
@@ -43,6 +43,15 @@ body.active-modal {
   left: 100%;
 }
 
+.btn-modal.btn-edit {
+  all: unset;
+  cursor: pointer;
+}
+
+.btn-modal.btn-edit::before {
+  display: none;
+}
+
 .modal {
   width: 100vw;
   height: 100vh;
@@ -63,17 +72,8 @@ body.active-modal {
   bottom: 0;
   position: fixed;
   background: rgba(0, 0, 0, 0.8);
-  animation: fadeIn 0.3s ease;
-  z-index: 1001;
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  z-index: 1001;
 }
 
 .modal-content {

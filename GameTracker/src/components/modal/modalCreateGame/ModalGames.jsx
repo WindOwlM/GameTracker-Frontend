@@ -132,7 +132,7 @@ export default function ModalGames({ gameData = null, gameId = null, buttonText 
                                 
                                 <div className="brutalist-container">
                                     <input 
-                                        type="text" 
+                                        type="text"
                                         name="title"
                                         placeholder="ESCRIBE AQUÍ"
                                         className="brutalist-input" 
