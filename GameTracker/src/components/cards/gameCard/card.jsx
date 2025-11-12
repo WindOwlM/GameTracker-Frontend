@@ -10,10 +10,10 @@ export function GameCard({id, title, desc, date, genres, platform, image, develo
     platform,
     developer,
     released,
-    coverImage: image,
+    coverImage,
     completed
   }
-
+  
   return (
     <>
       <div key={id} className="game-card">
