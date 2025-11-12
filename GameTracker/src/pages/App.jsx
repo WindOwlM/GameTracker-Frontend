@@ -10,7 +10,7 @@ import { dateFormat } from "../utils/dateFormat"
 
 function App(){
   const { games, deleteGame } = useGames()
-  const { reviews, deleteReview } = useReview()
+  const { reviews, deleteReview, fetchReview } = useReview()
   const [activeTab, setActiveTab] = useState('juegos')
   const [reviewFilter, setReviewFilter] = useState('hechas')
 
@@ -50,7 +50,7 @@ function App(){
             </div>
 
             <div className="right-section">
-              {activeTab === 'juegos' ? <ModalGames /> : <ModalReview />}
+              {activeTab === 'juegos' ? <ModalGames /> : <ModalReview onUpdate={fetchReview} />}
               
               <div className="tabs">
                 <button
@@ -122,11 +122,15 @@ function App(){
                             <ReviewCard
                             key={review._id}
                             id={review._id}
+                            game_id={review.game_id?._id}
+                            hoursPlayed={review.hoursPlayed}
+                            difficulty={review.difficulty}
                             username={review.user_id?.username}
                             title={review.game_id?.title}
                             rating={review.rating}
                             review={review.review}
                             recommend={review.recommend}
+                            onUpdate={fetchReview}
                             handleDeleteReview={handleDeleteReview}/>
                           ))
                         )
