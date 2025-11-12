@@ -13,7 +13,7 @@ export const useReview = () => {
         setError(null)
         try {
             const data = await reviewAPI.getAll()
-            setReview(data)
+            setReview([...data])
         } catch (err) {
             setError(err.message)
             console.error('Error fetching reviews:', err)
@@ -27,7 +27,6 @@ export const useReview = () => {
             throw new Error('Juego y estrellas son campos obligatorios')
         }
         const newReview = await reviewAPI.create(reviewData)
-        setReview(prev => [...prev, newReview])
         return newReview
         } catch (err) {
         setError(err.message)
@@ -35,24 +34,41 @@ export const useReview = () => {
         throw err
         }
     }
+
+    const editReview = async (gameId,body) => {
+        setError(null)
+        try {
+            const updatedReview = await reviewAPI.patch(gameId,body)
+            return updatedReview
+        } catch (err) {
+            setError(err.message)
+            console.error('Error al actualizar:', err)
+            throw err
+        } finally {
+            fetchReview()
+        }
+    }
+
     const deleteReview = async (id) => {
-            setError(null)
-        
-            try {
-                await reviewAPI.delete(id)
-                setReview(prev => prev.filter(review => 
-                    review._id !== id
-                ))
-            } catch (err) {
-                setError(err.message)
-                console.error('Error deleting review:', err)
-                throw err
-            }
+        setError(null)
+    
+        try {
+            await reviewAPI.delete(id)
+            setReview(prev => prev.filter(review => 
+                review._id !== id
+            ))
+        } catch (err) {
+            setError(err.message)
+            console.error('Error deleting review:', err)
+            throw err
+        }
     }
 
     return {
     reviews,
+    fetchReview,
     createReview,
+    editReview,
     deleteReview,
     error,
     }
