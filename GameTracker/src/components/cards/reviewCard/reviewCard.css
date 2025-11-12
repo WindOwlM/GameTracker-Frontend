@@ -6,11 +6,6 @@
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.review-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 8px 8px 0 #000;
-}
-
 .review-header {
   display: flex;
   justify-content: space-between;
