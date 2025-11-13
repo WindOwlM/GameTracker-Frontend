@@ -86,7 +86,7 @@ function App(){
                           genres={game.genres}
                           platform={game.platform}
                           developer={game.developer}
-                          released={yearFormat(game.released)}
+                          released={game.released}
                           coverImage={game.coverImage}
                           completed={game.completed}
                           onUpdate={fetchGames}
