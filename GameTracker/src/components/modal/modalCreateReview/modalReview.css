@@ -1,5 +1,5 @@
 .active-modal {
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 .btn-modal {
   padding: 15px 40px;

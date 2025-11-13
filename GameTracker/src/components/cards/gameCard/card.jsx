@@ -37,10 +37,6 @@ export function GameCard({id, title, desc, date, genres, platform, image, develo
               <span>{platform}</span>
             </div>
             <div className="game-detail-item">
-              <span className="game-detail-label">DESCRIPCION:</span>
-              <span>{desc}</span>
-            </div>
-            <div className="game-detail-item">
               <span className="game-detail-label">DESARROLLADOR:</span>
               <span>{developer}</span>
             </div>
