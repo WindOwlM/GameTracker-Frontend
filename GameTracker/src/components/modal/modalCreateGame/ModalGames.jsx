@@ -109,16 +109,16 @@ export default function ModalGames({ gameData = null, gameId = null, buttonText 
             </button>
 
             {modal && (
-                <div className="modal">
+                <div className="modal-games">
                     <div 
-                        className="overlay" 
+                        className="overlay-games" 
                         onMouseDown={(e) => {
                             e.stopPropagation()
                             toggleModal()
                         }}
                     ></div>
                     <div 
-                        className="modal-content" 
+                        className="modal-content-games" 
                         onMouseDown={(e) => e.stopPropagation()}
                     >
                         
